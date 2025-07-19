@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - src/bit_operations/s21_shift_decimal.c</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/bit_operations</a> - s21_shift_decimal.c<span style="font-size: 80%;"> (source / <a href="s21_shift_decimal.c.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">92.9&nbsp;%</td>
+            <td class="headerCovTableEntry">28</td>
+            <td class="headerCovTableEntry">26</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2024-03-11 14:34:57</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">2</td>
+          </tr>
+                  <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : #include &quot;../s21_decimal.h&quot;</span>
+<span id="L2"><span class="lineNum">       2</span>              : </span>
+<span id="L3"><span class="lineNum">       3</span>              : /**</span>
+<span id="L4"><span class="lineNum">       4</span>              :  * @brief Делает сдвиг всего long_decimal в левую сторону на n количество</span>
+<span id="L5"><span class="lineNum">       5</span>              :  * раз.</span>
+<span id="L6"><span class="lineNum">       6</span>              :  * @param n количество бит, на которое нужно сдвинуть decimal_long.</span>
+<span id="L7"><span class="lineNum">       7</span>              :  * @param num decimal_long, которому нужно передвинуть биты.</span>
+<span id="L8"><span class="lineNum">       8</span>              :  * @param i_max Сколько интов нужно задействовать в сдвиге</span>
+<span id="L9"><span class="lineNum">       9</span>              :  * @return overflow, в случае невозможности дальнейшего сдвига и переполнения</span>
+<span id="L10"><span class="lineNum">      10</span>              :  * возвращает 1.</span>
+<span id="L11"><span class="lineNum">      11</span>              :  */</span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC tlaBgGNC">     2097689 : int s21_shift_left_decimal_long(s21_decimal_long *num, int n, int i_max) {</span></span>
+<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">     2097689 :   int overflow = 0;</span></span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">     6173760 :   while (n != 0) {</span></span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">     4076071 :     if (s21_get_bit_long(*num, (i_max * 32) - 1) != 1) {</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">     4076071 :       num-&gt;bits[i_max] = num-&gt;bits[i_max] &lt;&lt; 1;</span></span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">    28531514 :       for (int i = i_max - 1; i &gt;= 0; i--) {</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">    24455443 :         if (s21_get_bit_long(*num, ((i + 1) * 32 - 1)) != 1) {</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">    24286023 :           num-&gt;bits[i] = num-&gt;bits[i] &lt;&lt; 1;</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">    24286023 :         } else {</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">      169420 :           s21_set_bit_long(num, (i + 1) * 32, 1);</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">      169420 :           num-&gt;bits[i] = num-&gt;bits[i] &lt;&lt; 1;</span></span>
+<span id="L23"><span class="lineNum">      23</span>              :         }</span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">    24455443 :       }</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">     4076071 :       n--;</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">     4076071 :     } else {</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaUNC tlaBgUNC">           0 :       overflow = 1;</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaUNC">           0 :       break;</span></span>
+<span id="L29"><span class="lineNum">      29</span>              :     }</span>
+<span id="L30"><span class="lineNum">      30</span>              :   }</span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC tlaBgGNC">     2097689 :   return overflow;</span></span>
+<span id="L32"><span class="lineNum">      32</span>              : }</span>
+<span id="L33"><span class="lineNum">      33</span>              : </span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">       39769 : void s21_shift_right_decimal_long(s21_decimal_long *num, int n) {</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">       79538 :   while (n != 0) {</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">      278383 :     for (int i = 0; i &lt;= 5; i++) {</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">      238614 :       if (s21_get_bit_long(*num, i * 32) != 1) {</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">      235738 :         num-&gt;bits[i] = num-&gt;bits[i] &gt;&gt; 1;</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">      235738 :       } else {</span></span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">        2876 :         num-&gt;bits[i] = num-&gt;bits[i] &gt;&gt; 1;</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">        2876 :         s21_set_bit_long(num, i * 32 - 1, 1);</span></span>
+<span id="L42"><span class="lineNum">      42</span>              :       }</span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">      238614 :     }</span></span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">       39769 :     n--;</span></span>
+<span id="L45"><span class="lineNum">      45</span>              :   }</span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">       39769 : }</span></span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>
